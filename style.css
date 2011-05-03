@@ -1,0 +1,14 @@
+
+body {
+  background: black;
+  text-align: center;
+}
+#container {
+  width: 990px;
+  text-align: center;
+  margin: 0 auto;
+}
+
+div.print {
+  margin: 10px 3px;
+}

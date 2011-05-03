@@ -1,0 +1,78 @@
+#!/bin/sh
+
+usage() {
+  echo "usage: $0 <dir>"
+  echo
+  echo "Make a contact print (html)."
+  echo "Requires exif and imagemagick."
+  exit 1
+}
+
+setup() {
+cat > $1/index.html <<EOF
+
+<html>
+  <head>
+    <link rel="stylesheet" href="style.css" type="text/css" media="screen" />
+  </head>
+  <body>    
+  <div id="container">
+    <div id="images">
+EOF
+}
+
+emit() {
+cat >> $1/index.html <<EOF
+      <div class="print">
+        <img src="$2" width="240" height="160" />
+      </div>
+EOF
+}
+
+
+finish() {
+cat >> $1/index.html <<EOF
+      </div>
+    </div>
+  </body>
+  <script src="jquery-1.5.2.min.js"></script> 
+  <script src="jquery.isotope.min.js"></script> 
+  <script>
+    \$(function() {
+      var container = \$("#images");
+      container.isotope({
+        itemSelector: '.print'
+        resizesContainer: true
+      });
+    });
+  </script>
+</html>
+EOF
+}
+
+[ $# -ne 1 ] && usage
+
+dir=$1
+smalls=$dir/contact_print
+mkdir -p $smalls
+
+base=$(dirname $0)
+cp $base/*.js $smalls
+cp $base/*.css $smalls
+
+setup $smalls
+
+for i in $(ls $dir/ | grep -v "contact_print"); do 
+  p=$dir$i
+  rotate=$(exif $p | grep "Scene Capture Type" | awk -F '|' '{print $2}')
+  if [ "$rotate" = "Landscape" ]; then
+    convert $p -resize 240x160 -rotate -90 $smalls/$i
+  else
+    convert $p -resize 240x160 $smalls/$i
+  fi
+
+  emit $smalls $i
+
+done
+
+finish $smalls
