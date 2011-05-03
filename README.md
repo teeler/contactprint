@@ -3,7 +3,9 @@
 Is for making contact prints. You know, like you used to do in the dark room.
 
 Requires:
+
   - _exif_ - command-line utility to show EXIF information in JPEG files
+
   - _imagemagick_ - image manipulation programs
 
 
