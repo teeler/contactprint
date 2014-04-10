@@ -16,5 +16,3 @@ Generates static HTML (with help from isotope + jquery)
 > 
 > Make a contact print (html).
 > Requires exif and imagemagick.
-
-Ok.
